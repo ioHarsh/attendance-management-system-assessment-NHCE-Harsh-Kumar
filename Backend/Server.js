@@ -1,11 +1,10 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const express=require('express');
+const dotenv=require('dotenv');
+const bcrypt=require('bcryptjs');
+const jwt=require('jsonwebtoken');
 dotenv.config(); 
-const app = express();
-const port = process.env.PORT || 5000;
-
+const app=express();
+const port=process.env.PORT || 5000;
 app.use(express.json()); 
 const users = [
     { username: 'admin', password: '$2a$10$Q/lc/JYXrfIZf7vOECxO8OoDndpt67n1/Ut5wZkUJ8pTQUHNh.9yO' }, // password is 'admin123'
