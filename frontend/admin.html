@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+
+  <h2>All Users' Attendance</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Date</th>
+        <th>Clock In</th>
+        <th>Clock Out</th>
+      </tr>
+    </thead>
+    <tbody id="allAttendance"></tbody>
+  </table>
+
+  <h2>User Management</h2>
+  <form id="userForm">
+    <input type="text" id="newUsername" placeholder="Username" required />
+    <input type="password" id="newPassword" placeholder="Password" required />
+    <select id="newRole">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button type="submit">Create User</button>
+  </form>
+
+  <script>
+    const apiBase = 'http://localhost:3000/api';
+
+    // Load attendance data
+    fetch(`${apiBase}/attendance/all`, {
+      credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('allAttendance');
+      tbody.innerHTML = '';
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.username}</td>
+          <td>${row.date}</td>
+          <td>${row.clockIn || ''}</td>
+          <td>${row.clockOut || ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+
+    // Handle user creation
+    document.getElementById('userForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newUser = {
+        username: document.getElementById('newUsername').value,
+        password: document.getElementById('newPassword').value,
+        role: document.getElementById('newRole').value
+      };
+      await fetch(`${apiBase}/users`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser)
+      });
+      alert('User created successfully!');
+      document.getElementById('userForm').reset();
+    });
+  </script>
+</body>
+</html>
